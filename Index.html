@@ -246,49 +246,8 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // MOCK google.script.run UNTUK PREVIEW LOKAL (Mencegah Error "google is not defined")
-        if (typeof google === 'undefined') {
-            console.warn("Menjalankan dalam mode Preview. Menggunakan Mock Backend.");
-            window.google = {
-                script: {
-                    run: {
-                        withSuccessHandler: function(callback) {
-                            this.successCallback = callback;
-                            return this;
-                        },
-                        withFailureHandler: function(callback) {
-                            this.failureCallback = callback;
-                            return this;
-                        },
-                        getWallOfThanks: function() {
-                            const self = this;
-                            setTimeout(function() {
-                                if(self.successCallback) self.successCallback(["Gufron (Mock)", "Siti (Mock)", "Budi (Mock)"]);
-                            }, 500);
-                        },
-                        getStatusFitur: function() {
-                            const self = this;
-                            setTimeout(function() {
-                                if(self.successCallback) self.successCallback([
-                                    {fitur: "Fitur AI (Simulasi)", status: "Dalam Pengembangan"},
-                                    {fitur: "Ekspor PDF (Simulasi)", status: "Selesai"}
-                                ]);
-                            }, 500);
-                        },
-                        submitDukungan: function(formData) {
-                            const self = this;
-                            setTimeout(function() {
-                                if(self.successCallback) self.successCallback({
-                                    success: true,
-                                    kode: "DEV-26-MOCK",
-                                    nama: formData.nama || "Pengguna Mock"
-                                });
-                            }, 1500);
-                        }
-                    }
-                }
-            };
-        }
+        // URL Web App Apps Script Anda (WAJIB DIISI)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyiQO3rFU6w-doYLDC64adGD0A91ixWiDn3mAeSlIQhRcJ5fgPiPD_m1FgwL34uK72Z/exec';
 
         let fileBase64 = "";
         let finalNominal = 0;
@@ -457,27 +416,39 @@
                 fileData: fileBase64
             };
 
-            google.script.run
-                .withSuccessHandler(function(response) {
-                    closeModal();
-                    if(response.success) {
-                        document.getElementById('tab-form').classList.add('hidden');
-                        document.getElementById('success-page').classList.remove('hidden');
-                        document.getElementById('s_nama').innerText = response.nama;
-                        document.getElementById('s_kode').innerText = response.kode;
-                        window.scrollTo(0,0);
-                        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Berhasil terkirim!', showConfirmButton: false, timer: 3000 });
-                    } else {
-                        Swal.fire('Error', 'Terjadi kesalahan: ' + response.message, 'error');
-                        resetBtn();
-                    }
-                })
-                .withFailureHandler(function(err) {
-                    closeModal();
-                    Swal.fire('Koneksi Gagal', 'Pastikan koneksi internet stabil.', 'error');
+            const payload = {
+                action: 'submit',
+                data: formData
+            };
+
+            // Mengirim Data Menggunakan Fetch API sebagai JSON
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8' // Menggunakan text/plain untuk menghindari pemblokiran CORS Preflight
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(response => {
+                closeModal();
+                if(response.success) {
+                    document.getElementById('tab-form').classList.add('hidden');
+                    document.getElementById('success-page').classList.remove('hidden');
+                    document.getElementById('s_nama').innerText = response.nama;
+                    document.getElementById('s_kode').innerText = response.kode;
+                    window.scrollTo(0,0);
+                    Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Berhasil terkirim!', showConfirmButton: false, timer: 3000 });
+                } else {
+                    Swal.fire('Error', 'Terjadi kesalahan: ' + response.message, 'error');
                     resetBtn();
-                })
-                .submitDukungan(formData);
+                }
+            })
+            .catch(err => {
+                closeModal();
+                Swal.fire('Koneksi Gagal', 'Pastikan koneksi internet stabil.', 'error');
+                resetBtn();
+            });
         }
 
         function resetBtn() {
@@ -494,7 +465,9 @@
 
         // Load Data dari Backend
         function loadWall() {
-            google.script.run.withSuccessHandler(function(data) {
+            fetch(SCRIPT_URL + '?action=getWall')
+            .then(res => res.json())
+            .then(data => {
                 isWallLoaded = true;
                 const container = document.getElementById('wall-container');
                 document.getElementById('wall-loading').classList.add('hidden');
@@ -509,11 +482,14 @@
                     html += `<div class="bg-blue-50 text-blue-700 border border-blue-100 px-4 py-2 rounded-full font-medium text-sm shadow-sm">${nama}</div>`;
                 });
                 container.innerHTML = html;
-            }).getWallOfThanks();
+            })
+            .catch(err => console.error('Error loading wall:', err));
         }
 
         function loadStatus() {
-            google.script.run.withSuccessHandler(function(data) {
+            fetch(SCRIPT_URL + '?action=getStatus')
+            .then(res => res.json())
+            .then(data => {
                 isStatusLoaded = true;
                 const tbody = document.getElementById('status-container');
                 
@@ -539,7 +515,8 @@
                     `;
                 });
                 tbody.innerHTML = html;
-            }).getStatusFitur();
+            })
+            .catch(err => console.error('Error loading status:', err));
         }
     </script>
 </body>
