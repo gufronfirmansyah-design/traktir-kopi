@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dukungan Pengembang Aplikasi</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 untuk Notifikasi Modern -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .radio-card input:checked + div { border-color: #3b82f6; background-color: #eff6ff; }
+        .loader { border-top-color: #3b82f6; -webkit-animation: spinner 1.5s linear infinite; animation: spinner 1.5s linear infinite; }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center">
+            <div class="font-bold text-xl text-blue-600">Dukungan Pengembang</div>
+            <div class="flex space-x-2 mt-2 sm:mt-0 text-sm overflow-x-auto">
+                <button onclick="switchTab('form')" id="btn-tab-form" class="px-3 py-2 rounded bg-blue-100 text-blue-700 font-semibold whitespace-nowrap">Dukungan</button>
+                <button onclick="switchTab('wall')" id="btn-tab-wall" class="px-3 py-2 rounded hover:bg-slate-100 text-slate-600 whitespace-nowrap">Wall of Thanks</button>
+                <button onclick="switchTab('status')" id="btn-tab-status" class="px-3 py-2 rounded hover:bg-slate-100 text-slate-600 whitespace-nowrap">Status Fitur</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-4xl mx-auto p-4 my-6">
+
+        <!-- TAB 1: FORM DUKUNGAN -->
+        <div id="tab-form" class="space-y-6">
+            <!-- Hero -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white text-center shadow-lg">
+                <h1 class="text-3xl font-bold mb-3">Mendukung Pengembangan Aplikasi Edukasi</h1>
+                <p class="text-blue-100 max-w-2xl mx-auto leading-relaxed">
+                    Dukungan Anda membantu saya (Gufron Firmansyah) dalam memelihara server dan menciptakan berbagai aplikasi baru yang dapat digunakan secara <b>gratis</b> oleh seluruh guru.
+                </p>
+                <div class="mt-4 inline-block bg-white/20 px-4 py-1 rounded-full text-sm">
+                    ✨ Dari Guru, Oleh Guru, Untuk Guru.
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form id="dukunganForm" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+                
+                <!-- Identitas -->
+                <h2 class="text-xl font-bold mb-4 border-b pb-2">1. Informasi Data Diri</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap *</label>
+                        <input type="text" id="nama" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Email Aktif *</label>
+                        <input type="email" id="email" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Instansi/Sekolah (Opsional)</label>
+                        <input type="text" id="instansi" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                </div>
+
+                <!-- Pilihan Dukungan -->
+                <h2 class="text-xl font-bold mb-4 border-b pb-2">2. Pilih Paket Dukungan</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <label class="radio-card cursor-pointer relative">
+                        <input type="radio" name="paket" value="15000" class="peer sr-only" required onchange="toggleCustomNominal()">
+                        <div class="border-2 rounded-xl p-4 transition-all hover:bg-slate-50 h-full">
+                            <div class="text-xl mb-1">☕</div>
+                            <div class="font-bold text-lg">Rp 15.000</div>
+                            <div class="text-sm text-slate-500 font-semibold">Secangkir Semangat</div>
+                            <div class="text-xs text-slate-400 mt-1">Satu tegukan semangat untuk terus berkarya.</div>
+                        </div>
+                    </label>
+                    <label class="radio-card cursor-pointer relative">
+                        <input type="radio" name="paket" value="25000" class="peer sr-only" onchange="toggleCustomNominal()">
+                        <div class="border-2 rounded-xl p-4 transition-all hover:bg-slate-50 h-full">
+                            <div class="text-xl mb-1">📚</div>
+                            <div class="font-bold text-lg">Rp 25.000</div>
+                            <div class="text-sm text-slate-500 font-semibold">Teman Belajar</div>
+                            <div class="text-xs text-slate-400 mt-1">Mendukung pengembangan fitur untuk guru.</div>
+                        </div>
+                    </label>
+                    <label class="radio-card cursor-pointer relative">
+                        <input type="radio" name="paket" value="50000" class="peer sr-only" onchange="toggleCustomNominal()">
+                        <div class="border-2 rounded-xl p-4 transition-all hover:bg-slate-50 h-full">
+                            <div class="text-xl mb-1">✏️</div>
+                            <div class="font-bold text-lg">Rp 50.000</div>
+                            <div class="text-sm text-slate-500 font-semibold">Pendukung Pengembangan</div>
+                            <div class="text-xs text-slate-400 mt-1">Membantu pengembangan & pemeliharaan.</div>
+                        </div>
+                    </label>
+                    <label class="radio-card cursor-pointer relative">
+                        <input type="radio" name="paket" value="100000" class="peer sr-only" onchange="toggleCustomNominal()">
+                        <div class="border-2 rounded-xl p-4 transition-all hover:bg-slate-50 h-full">
+                            <div class="text-xl mb-1">🚀</div>
+                            <div class="font-bold text-lg">Rp 100.000</div>
+                            <div class="text-sm text-slate-500 font-semibold">Sahabat Maharati</div>
+                            <div class="text-xs text-slate-400 mt-1">Mendukung hadirnya fitur-fitur baru.</div>
+                        </div>
+                    </label>
+                    <label class="radio-card cursor-pointer relative md:col-span-2">
+                        <input type="radio" name="paket" value="custom" class="peer sr-only" onchange="toggleCustomNominal()">
+                        <div class="border-2 rounded-xl p-4 transition-all hover:bg-slate-50">
+                            <div class="text-xl mb-1">❤️</div>
+                            <div class="font-bold text-lg mb-2">Dukungan Sukarela (Nominal Bebas)</div>
+                            <input type="number" id="nominalCustom" placeholder="Masukkan nominal (cth: 200000)" class="hidden w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Metode Pembayaran -->
+                <h2 class="text-xl font-bold mb-4 border-b pb-2">3. Pembayaran & Konfirmasi</h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Metode Pembayaran *</label>
+                    <select id="metode" required onchange="showPaymentInfo()" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                        <option value="">-- Pilih Metode Pembayaran --</option>
+                        <option value="DANA">DANA</option>
+                        <option value="ShopeePay">ShopeePay</option>
+                        <option value="Transfer Bank BRI">Transfer Bank (BRI)</option>
+                    </select>
+                </div>
+                
+                <!-- Info Rekening (Muncul Dinamis) -->
+                <div id="paymentInfo" class="hidden bg-blue-50 border border-blue-100 p-4 rounded-xl mb-6">
+                    <p class="text-sm text-slate-600 mb-2">Silakan transfer ke rekening berikut:</p>
+                    <div class="font-mono text-lg font-bold text-blue-800" id="rekeningNomor"></div>
+                    <div class="text-sm font-semibold text-slate-700" id="rekeningNama"></div>
+                    <button type="button" onclick="copyRekening()" class="mt-2 text-xs bg-white border border-slate-300 px-3 py-1 rounded shadow-sm hover:bg-slate-50">📋 Salin Nomor</button>
+                </div>
+
+                <!-- Upload Bukti -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Upload Bukti Transfer *</label>
+                    <input type="file" id="bukti" accept=".jpg,.jpeg,.png,.pdf" required class="w-full p-2 text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    <p class="text-xs text-slate-500 mt-1">Format: JPG, PNG, PDF. Maks 2 MB.</p>
+                </div>
+
+                <!-- Pesan & Usulan -->
+                <h2 class="text-xl font-bold mb-4 border-b pb-2">4. Pesan & Usulan</h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Ada usulan aplikasi/fitur baru untuk dikembangkan? (Opsional)</label>
+                    <textarea id="usulan" rows="2" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Tulis pesan atau kesan Anda (Opsional)</label>
+                    <textarea id="pesan" rows="2" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                </div>
+                
+                <div class="mb-6 flex items-center">
+                    <input type="checkbox" id="tampilWall" class="w-4 h-4 text-blue-600 rounded" checked>
+                    <label for="tampilWall" class="ml-2 text-sm text-slate-700">Izinkan nama saya ditampilkan di Wall of Thanks</label>
+                </div>
+
+                <button type="button" onclick="showSummary()" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-blue-700 transition shadow-md">
+                    Lanjut ke Ringkasan
+                </button>
+            </form>
+        </div>
+
+        <!-- TAB 2: WALL OF THANKS -->
+        <div id="tab-wall" class="hidden space-y-6">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">Wall of Thanks</h2>
+                <p class="text-slate-500 mb-6">Terima kasih kepada rekan-rekan guru hebat yang telah mendukung pengembangan aplikasi.</p>
+                <div id="wall-loading" class="text-blue-500 font-medium">Memuat data...</div>
+                <div id="wall-container" class="flex flex-wrap justify-center gap-3">
+                    <!-- Data masuk ke sini -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: STATUS FITUR -->
+        <div id="tab-status" class="hidden space-y-6">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">Status Pengembangan Fitur</h2>
+                <p class="text-slate-500 mb-6">Transparansi usulan fitur dari komunitas yang sedang kami kerjakan.</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 text-sm border-b">
+                                <th class="p-4 font-semibold">Nama Fitur</th>
+                                <th class="p-4 font-semibold w-48">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="status-container" class="text-sm">
+                            <tr><td colspan="2" class="p-4 text-center text-slate-500">Memuat data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- HALAMAN SUKSES (Disembunyikan awalnya) -->
+        <div id="success-page" class="hidden text-center bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-green-100">
+            <div class="text-6xl mb-4">🎉</div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-2">Terima Kasih, <span id="s_nama" class="text-blue-600"></span>!</h2>
+            <p class="text-slate-600 mb-6 max-w-lg mx-auto">Dukungan Anda telah diterima dan sangat berarti bagi keberlanjutan pengembangan aplikasi edukasi di masa mendatang.</p>
+            
+            <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl max-w-sm mx-auto mb-6">
+                <p class="text-sm text-slate-500 mb-1">Kode Pendukung Anda:</p>
+                <div class="text-3xl font-mono font-bold text-slate-800 tracking-wider mb-3" id="s_kode">DEV-00-000</div>
+                <button onclick="copyCode()" class="text-sm bg-white border border-slate-300 px-4 py-2 rounded shadow-sm hover:bg-slate-100">📋 Salin Kode</button>
+            </div>
+            
+            <p class="text-xs text-slate-500 mb-8 max-w-md mx-auto">Silakan simpan kode ini untuk digunakan pada layanan eksklusif atau aplikasi premium di masa mendatang.</p>
+            
+            <button onclick="location.reload()" class="bg-slate-800 text-white font-semibold py-2 px-6 rounded-lg hover:bg-slate-900 transition">
+                Kembali ke Halaman Utama
+            </button>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-6 text-sm text-slate-400">
+        &copy; 2026 Gufron Firmansyah - Dari Guru, Oleh Guru, Untuk Guru.
+    </footer>
+
+    <!-- MODAL RINGKASAN -->
+    <div id="modalSummary" class="fixed inset-0 bg-slate-900/50 hidden flex items-center justify-center z-[100] px-4">
+        <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl transform transition-all scale-95 opacity-0" id="modalContent">
+            <h3 class="text-xl font-bold mb-4 border-b pb-2">Ringkasan Dukungan</h3>
+            <div class="space-y-3 text-sm mb-6">
+                <div class="flex justify-between"><span class="text-slate-500">Nama:</span> <span id="r_nama" class="font-semibold"></span></div>
+                <div class="flex justify-between"><span class="text-slate-500">Instansi:</span> <span id="r_instansi" class="font-semibold text-right"></span></div>
+                <div class="flex justify-between"><span class="text-slate-500">Nominal:</span> <span id="r_nominal" class="font-bold text-blue-600"></span></div>
+                <div class="flex justify-between"><span class="text-slate-500">Metode:</span> <span id="r_metode" class="font-semibold"></span></div>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="closeModal()" class="w-1/3 py-2.5 rounded-lg font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition">Kembali</button>
+                <button onclick="processSubmit()" id="btnSubmit" class="w-2/3 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 transition flex justify-center items-center">
+                    Kirim Dukungan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // MOCK google.script.run UNTUK PREVIEW LOKAL (Mencegah Error "google is not defined")
+        if (typeof google === 'undefined') {
+            console.warn("Menjalankan dalam mode Preview. Menggunakan Mock Backend.");
+            window.google = {
+                script: {
+                    run: {
+                        withSuccessHandler: function(callback) {
+                            this.successCallback = callback;
+                            return this;
+                        },
+                        withFailureHandler: function(callback) {
+                            this.failureCallback = callback;
+                            return this;
+                        },
+                        getWallOfThanks: function() {
+                            const self = this;
+                            setTimeout(function() {
+                                if(self.successCallback) self.successCallback(["Gufron (Mock)", "Siti (Mock)", "Budi (Mock)"]);
+                            }, 500);
+                        },
+                        getStatusFitur: function() {
+                            const self = this;
+                            setTimeout(function() {
+                                if(self.successCallback) self.successCallback([
+                                    {fitur: "Fitur AI (Simulasi)", status: "Dalam Pengembangan"},
+                                    {fitur: "Ekspor PDF (Simulasi)", status: "Selesai"}
+                                ]);
+                            }, 500);
+                        },
+                        submitDukungan: function(formData) {
+                            const self = this;
+                            setTimeout(function() {
+                                if(self.successCallback) self.successCallback({
+                                    success: true,
+                                    kode: "DEV-26-MOCK",
+                                    nama: formData.nama || "Pengguna Mock"
+                                });
+                            }, 1500);
+                        }
+                    }
+                }
+            };
+        }
+
+        let fileBase64 = "";
+        let finalNominal = 0;
+        let isWallLoaded = false;
+        let isStatusLoaded = false;
+
+        // Info Rekening Berdasarkan Permintaan
+        const REKENING = {
+            "DANA": { no: "087715542818", nama: "An. Gufron Firmansyah" },
+            "ShopeePay": { no: "087715542818", nama: "An. Gufron Firmansyah" },
+            "Transfer Bank BRI": { no: "768701007066531", nama: "An. Gufron Firmansyah" }
+        };
+
+        function switchTab(tabId) {
+            document.getElementById('tab-form').classList.add('hidden');
+            document.getElementById('tab-wall').classList.add('hidden');
+            document.getElementById('tab-status').classList.add('hidden');
+            document.getElementById('success-page').classList.add('hidden');
+
+            document.getElementById('btn-tab-form').className = "px-3 py-2 rounded hover:bg-slate-100 text-slate-600 whitespace-nowrap";
+            document.getElementById('btn-tab-wall').className = "px-3 py-2 rounded hover:bg-slate-100 text-slate-600 whitespace-nowrap";
+            document.getElementById('btn-tab-status').className = "px-3 py-2 rounded hover:bg-slate-100 text-slate-600 whitespace-nowrap";
+
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            
+            if(tabId === 'form') {
+                document.getElementById('btn-tab-form').className = "px-3 py-2 rounded bg-blue-100 text-blue-700 font-semibold whitespace-nowrap";
+            } else if(tabId === 'wall') {
+                document.getElementById('btn-tab-wall').className = "px-3 py-2 rounded bg-blue-100 text-blue-700 font-semibold whitespace-nowrap";
+                if(!isWallLoaded) loadWall();
+            } else if(tabId === 'status') {
+                document.getElementById('btn-tab-status').className = "px-3 py-2 rounded bg-blue-100 text-blue-700 font-semibold whitespace-nowrap";
+                if(!isStatusLoaded) loadStatus();
+            }
+        }
+
+        function toggleCustomNominal() {
+            const selected = document.querySelector('input[name="paket"]:checked').value;
+            const customInput = document.getElementById('nominalCustom');
+            if (selected === 'custom') {
+                customInput.classList.remove('hidden');
+                customInput.required = true;
+            } else {
+                customInput.classList.add('hidden');
+                customInput.required = false;
+                customInput.value = "";
+            }
+        }
+
+        function showPaymentInfo() {
+            const metode = document.getElementById('metode').value;
+            const divInfo = document.getElementById('paymentInfo');
+            if (metode && REKENING[metode]) {
+                document.getElementById('rekeningNomor').innerText = REKENING[metode].no;
+                document.getElementById('rekeningNama').innerText = REKENING[metode].nama;
+                divInfo.classList.remove('hidden');
+            } else {
+                divInfo.classList.add('hidden');
+            }
+        }
+
+        // Fallback untuk copy clipboard yang diblokir oleh iFrame / Permissions
+        function fallbackCopyTextToClipboard(text) {
+            var textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Fallback: unable to copy', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function copyRekening() {
+            const no = document.getElementById('rekeningNomor').innerText;
+            fallbackCopyTextToClipboard(no);
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Nomor disalin!', showConfirmButton: false, timer: 1500 });
+        }
+
+        // File Validation & Convert to Base64
+        document.getElementById('bukti').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Validasi Ukuran (2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                Swal.fire('File Terlalu Besar', 'Maksimal ukuran file adalah 2 MB.', 'error');
+                this.value = "";
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                fileBase64 = event.target.result.split(',')[1];
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        }
+
+        function showSummary() {
+            const form = document.getElementById('dukunganForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const paket = document.querySelector('input[name="paket"]:checked');
+            if(!paket) {
+                Swal.fire('Oops', 'Silakan pilih paket dukungan.', 'warning'); return;
+            }
+            
+            finalNominal = paket.value === 'custom' ? document.getElementById('nominalCustom').value : paket.value;
+            if (finalNominal < 10000) {
+                Swal.fire('Oops', 'Minimal dukungan adalah Rp 10.000', 'warning'); return;
+            }
+
+            document.getElementById('r_nama').innerText = document.getElementById('nama').value;
+            document.getElementById('r_instansi').innerText = document.getElementById('instansi').value || "-";
+            document.getElementById('r_nominal').innerText = formatRupiah(finalNominal);
+            document.getElementById('r_metode').innerText = document.getElementById('metode').value;
+
+            const modal = document.getElementById('modalSummary');
+            const content = document.getElementById('modalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modalSummary');
+            const content = document.getElementById('modalContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => { modal.classList.add('hidden'); }, 200);
+        }
+
+        function processSubmit() {
+            const btn = document.getElementById('btnSubmit');
+            btn.innerHTML = '<div class="loader w-5 h-5 rounded-full border-2 border-white mr-2"></div> Memproses...';
+            btn.disabled = true;
+
+            const fileInput = document.getElementById('bukti').files[0];
+
+            const formData = {
+                nama: document.getElementById('nama').value,
+                email: document.getElementById('email').value,
+                instansi: document.getElementById('instansi').value,
+                nominal: finalNominal,
+                metode: document.getElementById('metode').value,
+                pesan: document.getElementById('pesan').value,
+                usulan: document.getElementById('usulan').value,
+                tampilWall: document.getElementById('tampilWall').checked ? "Ya" : "Tidak",
+                fileName: fileInput.name,
+                mimeType: fileInput.type,
+                fileData: fileBase64
+            };
+
+            google.script.run
+                .withSuccessHandler(function(response) {
+                    closeModal();
+                    if(response.success) {
+                        document.getElementById('tab-form').classList.add('hidden');
+                        document.getElementById('success-page').classList.remove('hidden');
+                        document.getElementById('s_nama').innerText = response.nama;
+                        document.getElementById('s_kode').innerText = response.kode;
+                        window.scrollTo(0,0);
+                        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Berhasil terkirim!', showConfirmButton: false, timer: 3000 });
+                    } else {
+                        Swal.fire('Error', 'Terjadi kesalahan: ' + response.message, 'error');
+                        resetBtn();
+                    }
+                })
+                .withFailureHandler(function(err) {
+                    closeModal();
+                    Swal.fire('Koneksi Gagal', 'Pastikan koneksi internet stabil.', 'error');
+                    resetBtn();
+                })
+                .submitDukungan(formData);
+        }
+
+        function resetBtn() {
+            const btn = document.getElementById('btnSubmit');
+            btn.innerHTML = 'Kirim Dukungan';
+            btn.disabled = false;
+        }
+
+        function copyCode() {
+            const code = document.getElementById('s_kode').innerText;
+            fallbackCopyTextToClipboard(code);
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Kode disalin!', showConfirmButton: false, timer: 1500 });
+        }
+
+        // Load Data dari Backend
+        function loadWall() {
+            google.script.run.withSuccessHandler(function(data) {
+                isWallLoaded = true;
+                const container = document.getElementById('wall-container');
+                document.getElementById('wall-loading').classList.add('hidden');
+                
+                if(data.length === 0) {
+                    container.innerHTML = '<div class="text-slate-400 w-full">Belum ada data. Jadilah yang pertama!</div>';
+                    return;
+                }
+                
+                let html = '';
+                data.forEach(nama => {
+                    html += `<div class="bg-blue-50 text-blue-700 border border-blue-100 px-4 py-2 rounded-full font-medium text-sm shadow-sm">${nama}</div>`;
+                });
+                container.innerHTML = html;
+            }).getWallOfThanks();
+        }
+
+        function loadStatus() {
+            google.script.run.withSuccessHandler(function(data) {
+                isStatusLoaded = true;
+                const tbody = document.getElementById('status-container');
+                
+                if(data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="2" class="p-4 text-center text-slate-500">Belum ada fitur diusulkan.</td></tr>';
+                    return;
+                }
+
+                let html = '';
+                data.forEach(item => {
+                    let color = 'bg-slate-100 text-slate-600'; // Default: Dipertimbangkan
+                    if (item.status === 'Dalam Pengembangan') color = 'bg-blue-100 text-blue-700';
+                    if (item.status === 'Sedang Diuji') color = 'bg-orange-100 text-orange-700';
+                    if (item.status === 'Selesai') color = 'bg-green-100 text-green-700';
+
+                    html += `
+                        <tr class="border-b hover:bg-slate-50">
+                            <td class="p-4">${item.fitur}</td>
+                            <td class="p-4">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${color}">${item.status}</span>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+            }).getStatusFitur();
+        }
+    </script>
+</body>
+</html>
